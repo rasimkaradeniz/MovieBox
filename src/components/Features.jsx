@@ -12,11 +12,10 @@ import {features} from '../store'
 
 export default function Features (){
     return(
-        <section className='container-sm'>
+        <section className='container lg:px-0 px-5'>
             <Title title="Features" />
             <div  className="mx-auto my-4"> 
             <Swiper
-        
                     modules={[Autoplay]}
                     autoplay={{delay:3000}}
                     spaceBetween={50}
@@ -24,9 +23,7 @@ export default function Features (){
                     scrollbar={{ draggable: true }}
             >
             {features.map((feature)=>
-
                     <SwiperSlide><Card item={feature}/></SwiperSlide>
-                
             )}
            
             

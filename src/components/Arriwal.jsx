@@ -12,9 +12,9 @@ import {features} from '../store'
 
 export default function Arrival (){
     return(
-        <section>
+        <section className='container lg:px-0 px-5'>
             <Title title="New Arrival" />
-            <div  className="container mx-auto my-4"> 
+            <div  className=" mx-auto my-4 "> 
             <Swiper
         
                     modules={[Autoplay]}

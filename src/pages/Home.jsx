@@ -2,6 +2,7 @@ import React from 'react'
 import { AiOutlineRight } from 'react-icons/ai';
 import Arrival from '../components/Arriwal';
 import Features from '../components/Features';
+import Header from '../components/Header';
 
 
 
@@ -13,8 +14,9 @@ export default function Home()  {
 
   return (
     <>
-    <section className="bg-red-500">
-      <div className=" w-full h-[600px] bg-cover bg-hero-pattern">
+    <Header bgImg={true} />
+    <section >
+      <div className=" w-full h-[600px] bg-cover bg-center md:bg-top	 bg-hero-pattern">
       </div>
     </section>
     <div className='container mx-auto space-y-10 mt-10'>
