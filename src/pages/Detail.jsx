@@ -1,26 +1,235 @@
-import React, {  useState } from 'react'
+import React, {  useEffect, useRef, useState } from 'react'
 import Header from '../components/Header'
 import { prominent } from 'color.js'
+import IconButton from '../components/IconButton';
+import { AiFillHeart, AiFillStar } from 'react-icons/ai';
+import { FaBookmark, FaListUl } from 'react-icons/fa';
+import { BsPlayFill } from 'react-icons/bs';
+import { CircularProgressbar,buildStyles  } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function Detail  () {
-  
+  const scroll = useRef()
+  const after = useRef()
   const [gradient,setGradient] = useState('');
   
   prominent('https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg', { amount: 2 }).then(color => {
     setGradient(`linear-gradient(to right, rgb(${color[0][0]}, ${color[0][1]}, ${color[0][2]}) 150px, rgba(${color[1][0]}, ${color[1][1]}, ${color[1][2]}, 0.84) 100%)`)
   })
   
+  useEffect(()=>{
+    if(scroll && scroll.current){
+      scroll.current.addEventListener("scroll", () => {
+        if(scroll.current.scrollLeft >40){
+          after.current.style.opacity = "0"
+        }else{
+          after.current.style.opacity = "100"
+        }
+      });
+    }
+  },[])
   
 
   
   return (
     <>
     <Header />
-    <section className='h-[700px] w-full'>
+    <section className='w-full'>
       <div className='h-full w-full border ' 
       style={{backgroundImage:"url(" + "https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg" + ")",backgroundPosition:"right -200px top",
       backgroundSize:"cover",backgroundRepeat:"no-repeat"}}>
-      <div className='flex justify-center flex-wrap w-full h-full' style={{backgroundImage:gradient}}></div>
+      <div className='flex justify-center flex-wrap w-full h-full' style={{backgroundImage:gradient}}>
+        <div className='px-10 py-8 w-full max-w-[1440px]'>
+          <div className='flex flex-nowrap'>
+               <div className='w-[300px] min-w-[300px] h-[450px] block'>
+                  <div className='w-full h-full'>
+                  <img className='w-full h-full' src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" alt="" />
+
+                  </div>
+              </div>
+              <div className='flex text-white'>
+                  <div className='pl-10 flex flex-wrap content-center items-center gap-7'>
+                    <div className='w-full  text-white '>
+                      <h1 className='text-4xl font-bold'>Stranger Things</h1>
+                      <span>Drama, Sci-Fi & Fantasy, Mystery</span>
+                    </div>
+                    <ul className='flex gap-5 w-full items-center'>
+                      <li className='flex items-center h-17 gap-2'>
+                         <div className='w-16 h-16 duration-300 hover:scale-125'>
+                         <CircularProgressbar  value={86} text={`${86}%`} background backgroundPadding={6} 
+                          styles={buildStyles({
+                              backgroundColor: "#081c22",
+                              textColor: "#fff",
+                              pathColor: "#21d07a",
+                              trailColor: "transparent",
+                              textSize :'24px'
+                            })}
+                          />
+                         </div>
+                         <div className='font-bold'> User <br />Score</div>
+                      </li>
+                      <li> <IconButton><FaListUl /></IconButton></li>
+                      <li> <IconButton><AiFillHeart /></IconButton></li>
+                      <li> <IconButton><FaBookmark /> </IconButton></li>
+                      <li> <IconButton> <AiFillStar /> </IconButton></li>
+                      <li > <a href="" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a></li>
+                    </ul>
+                    <div className='text-white w-full'>
+                      <h4 className='opacity-70 italic text-lg font-normal'>Every ending has a beginning.</h4>
+                      <h2 className='text-lg font-bold my-2'>Overview</h2>
+                      <p>When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.</p>
+
+                      <ol className='flex w-full mt-7'>
+                        <li className='w-1/3'>
+                          <p className='font-bold'>Matt Duffer</p>
+                          <p>Creator</p>
+                        </li>
+                        <li>
+                        <p className='font-bold'>Ross Duffer</p>
+                          <p>Creator</p>
+                        </li>
+                      </ol>
+                    
+                    </div>
+                    
+                  </div>
+              </div> 
+          </div>
+
+        </div>
+      </div>
+
+      </div>
+    </section>
+    <section className='w-full my-10'>
+      <div className="container mx-auto">
+        <div className='w-3/4 max-w-3/4'>
+          <div>
+            <h2 className='font-semibold text-2xl'>Series Cast</h2>
+          </div>
+          <div className='mt-3 relative'>
+            <ul ref={scroll} className="flex gap-3 scrollbar  relative overflow-x-scroll overflow-y-hidden pb-3 ">
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              <li>
+                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
+                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
+                    </a>
+                    <div className="py-3 px-3">
+                        <a href="#">
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
+                        
+                    </div>
+                </div>
+              </li>
+              
+            </ul>
+            <span ref={after} className='ease-in-out w-16 h-full absolute top-0 right-0 bg-shadow-img will-change-scroll pointer-events-none'></span>
+          </div>
+          
+        </div>
+         <div className='mt-4'>
+            <a href="" className='font-semibold text-lg'> Full Cast & Crew</a>
+        </div>                   
 
       </div>
     </section>

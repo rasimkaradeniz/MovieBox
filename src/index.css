@@ -8,4 +8,23 @@
     }
 }
 
-
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+  
+    .scrollbar::-webkit-scrollbar-track {
+      border-radius: #dbdbdb;
+      background: transparent;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: #dbdbdb;
+      border-radius: 100vh;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #dbdbdb;
+    }
+  }
