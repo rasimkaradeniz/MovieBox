@@ -9,22 +9,32 @@
 }
 
 @layer utilities {
-    .scrollbar::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-  
-    .scrollbar::-webkit-scrollbar-track {
-      border-radius: #dbdbdb;
-      background: transparent;
-    }
-  
-    .scrollbar::-webkit-scrollbar-thumb {
-      background: #dbdbdb;
-      border-radius: 100vh;
-    }
-  
-    .scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #dbdbdb;
-    }
+  .scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: #dbdbdb;
+    background: transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #dbdbdb;
+    border-radius: 10px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #dbdbdb;
+  }
+  .swiper-container {
+    width: 480px;
+  }
+  
+  
+  
+}
+.slick-prev, .slick-next{
+  color:currentColor !important;
+  
+}  

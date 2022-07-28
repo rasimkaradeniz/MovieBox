@@ -6,12 +6,8 @@ function Card({item}) {
   const photo =require(`../img/${item.img}`)
   return (
     <Link to="/detail">
-    <div className="relative w-[250px]">
-        <img className="relative peer" src={photo} alt="card" />
-        <div className="absolute top-0 translate-y-4 w-full justify-between px-4 hidden peer-hover:flex">
-            <div className="bg-gray-400/50 text-xs font-bold w-[74px] h-[22px] grid place-items-center px-[8px] py-[3px] rounded-xl">TV SERIES</div>
-            <div className="bg-[#F3F4F6]/50 text-xs font-bold w-[30px] h-[30px] grid place-items-center rounded-full"><BsFillSuitHeartFill className='text-lg text-[#D1D5DB]' /></div>
-        </div>
+    <div className="relative w-full md:block flex flex-col pl-0 md:pl-4 justify-center">
+        <img className="relative peer w-full object-contain md:object-fill md:min-w-full md:h-[375px]" src={photo} alt="card" />
         <div className="flex flex-col gap-3">
             <h6 className="text-xs text-gray-400 mt-3 font-bold ">{item.country}, {item.date}</h6>
             <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>

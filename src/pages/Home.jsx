@@ -22,13 +22,13 @@ export default function Home()  {
     <div className='container mx-auto space-y-10 mt-10'>
       <Features />
       <Arrival />
-      <section className="">
+      <section className="container md:px-0 px-10">
           <div className="w-full flex items-center justify-between">
             <h2 className="text-black text-4xl font-bold">Exclusive Video</h2>
             <button className="flex items-center font-bold gap-2 text-red-700 text-lg  hover:underline hover:text-red-800">See more <AiOutlineRight/> </button>
           </div>    
       </section>
-      <section className="">
+      <section className="container md:px-0 px-10">
           <div className="w-full flex items-center justify-between">
             <h2 className="text-black text-4xl font-bold">Featured Casts</h2>
             <button className="flex items-center font-bold gap-2 text-red-700 text-lg  hover:underline hover:text-red-800">See more <AiOutlineRight/> </button>
