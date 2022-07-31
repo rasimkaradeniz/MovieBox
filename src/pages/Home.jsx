@@ -1,17 +1,23 @@
-import React from 'react'
-import { AiOutlineRight } from 'react-icons/ai';
+import React, { useEffect } from 'react'
 import Arrival from '../components/Arriwal';
 import Features from '../components/Features';
 import Header from '../components/Header';
-
-
+import { useSelector,useDispatch } from 'react-redux';
+import { fetchPopuler } from '../store/movies';
 
 
 
 export default function Home()  {
   
-
-
+  const {data,error,loading} = useSelector(state =>state.movies.popular)
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(fetchPopuler())
+    
+  },[])
+  
+  console.log(data)
+   
   return (
     <>
     <Header bgImg={true} />
@@ -19,21 +25,10 @@ export default function Home()  {
       <div className=" w-full h-[600px] bg-cover bg-center md:bg-top	 bg-hero-pattern">
       </div>
     </section>
-    <div className='container mx-auto space-y-10 mt-10'>
+    <div className='max-w-[1280px] mx-auto space-y-10 mt-10'>
       <Features />
       <Arrival />
-      <section className="container md:px-0 px-10">
-          <div className="w-full flex items-center justify-between">
-            <h2 className="text-black text-4xl font-bold">Exclusive Video</h2>
-            <button className="flex items-center font-bold gap-2 text-red-700 text-lg  hover:underline hover:text-red-800">See more <AiOutlineRight/> </button>
-          </div>    
-      </section>
-      <section className="container md:px-0 px-10">
-          <div className="w-full flex items-center justify-between">
-            <h2 className="text-black text-4xl font-bold">Featured Casts</h2>
-            <button className="flex items-center font-bold gap-2 text-red-700 text-lg  hover:underline hover:text-red-800">See more <AiOutlineRight/> </button>
-          </div>    
-      </section>
+      
     </div>
      
     </>

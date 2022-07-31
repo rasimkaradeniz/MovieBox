@@ -1,9 +1,9 @@
 import React from 'react'
 import Card from '../components/Card';
 import Title from './Title';
-import {features} from '../store'
 import Slider from "react-slick";
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
 
 
 function NextButton ({ onClick, className }) {
@@ -23,6 +23,8 @@ function PrevButton ({ onClick, className }) {
 
 
 export default function Arrival (){
+	const features = useSelector((state) => state.movies.list)
+
     const settings = {
 		dots: false,
 		infinite: true,
@@ -50,7 +52,7 @@ export default function Arrival (){
 	};
   
     return(
-        <section className='container lg:px-0 px-10'>
+        <section className='max-w-[1240px] lg:px-0 px-10'>
             <Title title="New Arrivals" />
             <div  className="mx-auto my-4 "> 
             <Slider {...settings} >

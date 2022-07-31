@@ -8,13 +8,15 @@ import { BsPlayFill } from 'react-icons/bs';
 import { CircularProgressbar,buildStyles  } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
+
+
 export default function Detail  () {
   const scroll = useRef()
   const after = useRef()
   const [gradient,setGradient] = useState('');
   const [mobil,setMobil] = useState(false);
   const [w, setW] = useState(window.innerWidth)
-
+ 
   
   prominent('https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg', { amount: 2 }).then(color => {
     setGradient(`linear-gradient(to right, rgb(${color[0][0]}, ${color[0][1]}, ${color[0][2]}) 150px, rgba(${color[1][0]}, ${color[1][1]}, ${color[1][2]}, 0.84) 100%)`)
@@ -86,7 +88,7 @@ export default function Detail  () {
                       <li> <IconButton><AiFillHeart /></IconButton></li>
                       <li> <IconButton><FaBookmark /> </IconButton></li>
                       <li> <IconButton> <AiFillStar /> </IconButton></li>
-                      <li > <a href="" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a></li>
+                      <li > <a href="www.youtube.com" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a></li>
                     </ul> : 
                     <div className='w-full flex flex-col gap-5'>
                        <div className='w-full flex justify-around'>
@@ -141,7 +143,7 @@ export default function Detail  () {
 
       </div>
     </section>
-    <section className='w-full my-10'>
+    <section className='w-full h-auto my-10'>
       <div className="container mx-auto">
         <div className='md:w-3/4 md:max-w-3/4 w-full px-2'>
           <div>
@@ -267,7 +269,7 @@ export default function Detail  () {
           </div>
           
         </div>
-         <div className='mt-4 md:px-0 px-2 my-2'>
+         <div className='mt-4 md:px-0 px-2 pb-20'>
             <a href="" className='font-semibold text-lg'> Full Cast & Crew</a>
         </div>                   
       </div>

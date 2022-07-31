@@ -1,15 +1,15 @@
 import React from 'react'
 import Card from '../components/Card';
 import Title from './Title';
-import {features} from '../store'
 import Slider from "react-slick";
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
 
 
 function NextButton ({ onClick, className }) {
 	return (
 		<button className={`${className} `} onClick={onClick}>
-			<AiOutlineRight size={22}
+			<AiOutlineRight size={24}
 />
 		</button>
 	)
@@ -17,13 +17,16 @@ function NextButton ({ onClick, className }) {
 function PrevButton ({ onClick, className }) {
 	return (
 		<button className={`${className} !`} onClick={onClick}>
-			<AiOutlineLeft size={22} />
+			<AiOutlineLeft size={24} />
 		</button>
 	)
 }
 
 
 export default function Features (){
+	const features = useSelector((state) => state.movies.list)
+
+
     const settings = {
 		dots: false,
 		infinite: true,
@@ -53,14 +56,14 @@ export default function Features (){
 	};
   
     return(
-        <section className='container md:px-0 px-10'>
+        <section className='max-w-[1240px]  md:px-0 px-10'>
             <Title title="Features" />
             <div  className="mx-auto my-4 "> 
-            <Slider {...settings} className="flex gap-x-2">
+			<Slider {...settings} >
 
-            {features.map((feature)=><Card item={feature}/>)}
-                
-            </Slider>
+				{features.map((feature)=><Card item={feature}/>)}
+					
+				</Slider>
         </div>
     </section>
     )

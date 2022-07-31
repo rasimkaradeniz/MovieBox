@@ -37,4 +37,13 @@
 .slick-prev, .slick-next{
   color:currentColor !important;
   
-}  
+} 
+.form-floating > .form-control:not(:placeholder-shown)~label{
+  opacity: .60;
+  transform: scale(0.85) translateY(-0.25rem);  
+
+} 
+.form-floating > .form-control:not(:placeholder-shown){
+  padding-top:1.625rem;
+  padding-bottom: 0.625rem;
+} 
