@@ -8,6 +8,9 @@ import { BsPlayFill } from 'react-icons/bs';
 import { CircularProgressbar,buildStyles  } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
+import { useDispatch,useSelector } from 'react-redux';
+import {  fetchMovieDetail } from '../store/movies';
+import { useParams } from 'react-router-dom';
 
 
 export default function Detail  () {
@@ -16,9 +19,16 @@ export default function Detail  () {
   const [gradient,setGradient] = useState('');
   const [mobil,setMobil] = useState(false);
   const [w, setW] = useState(window.innerWidth)
+  const {id} = useParams()
+  const dispatch = useDispatch()
+  const {data,loading,error} =useSelector(state => state.movies.detail)
+  useEffect(()=>{
+    dispatch(fetchMovieDetail(id))
+    
+  },[])
  
   
-  prominent('https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg', { amount: 2 }).then(color => {
+  data && prominent(`https://image.tmdb.org/t/p/w1280/${data.backdrop_path}`, { amount: 2 }).then(color => {
     setGradient(`linear-gradient(to right, rgb(${color[0][0]}, ${color[0][1]}, ${color[0][2]}) 150px, rgba(${color[1][0]}, ${color[1][1]}, ${color[1][2]}, 0.84) 100%)`)
   })
   
@@ -51,28 +61,35 @@ export default function Detail  () {
   return (
     <>
     <Header />
-    <section className='w-full h-auto'>
+    {data ? <section className='w-full h-auto'>
       <div className='h-full w-full md:border ' 
-      style={{  backgroundImage: "url(" + "https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg" + ")",backgroundPosition: !mobil && "right -200px top",
+      style={{  backgroundImage: "url(" + `https://image.tmdb.org/t/p/w1280/${data.backdrop_path}` + ")",backgroundPosition: !mobil && "right -200px top",
       backgroundSize: mobil ? "contain" : "cover",backgroundRepeat: "no-repeat"}}>
       <div className='flex justify-center flex-wrap w-full h-full' style={{backgroundImage:!mobil && gradient}}>
         <div className='md:px-10  py-8 w-full max-w-[1440px]'>
           <div className='flex md:flex-nowrap flex-wrap w-full'>
                <div className='md:w-[300px] md:min-w-[300px] md:h-[450px] block ' >
                   <div className='md:w-full md:h-full'>
-                    <img className='ml-3 md:ml-0 md:w-full md:min-w-full md:max-w-full md:h-full md:min-h-full md:max-h-full w-[calc(((100vw/2.222222)-40px)/1.5)] max-w-[calc(((100vw/2.222222)-40px)/1.5)] min-w-[calc(((100vw/2.222222)-40px)/1.5)] h-[calc((100vw/2.222222)-40px)] min-h[calc((100vw/2.222222)-40px)] ' src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" alt="" />
+                    <img className='ml-3 md:ml-0 md:w-full md:min-w-full md:max-w-full md:h-full md:min-h-full md:max-h-full w-[calc(((100vw/2.222222)-40px)/1.5)] max-w-[calc(((100vw/2.222222)-40px)/1.5)] min-w-[calc(((100vw/2.222222)-40px)/1.5)] h-[calc((100vw/2.222222)-40px)] min-h[calc((100vw/2.222222)-40px)] ' src={`https://image.tmdb.org/t/p/original/${data.poster_path}`} alt="" />
                   </div>
               </div>
               <div className='flex text-white mt-14 w-full  md:mt-0' style={{backgroundImage:mobil && gradient}}>
                   <div className='md:pl-10 px-5 py-3 md:px-0 md:py-0  flex flex-wrap content-center items-center gap-7'>
                     <div className='w-full  text-white '>
-                      <h1 className='text-4xl font-bold'>Stranger Things</h1>
-                      <span>Drama, Sci-Fi & Fantasy, Mystery</span>
+                      <h1 className='text-4xl font-bold'>{data.original_title}</h1>
+                      {data.genres.map((category,key)=>{
+                       let length = data.genres.length
+                        return (
+                          <span key={key}>{category.name}{length-1 === key ? " " : " - " }</span>
+                        )
+                      })}
+                      
                     </div>
                     {!mobil ? <ul className='flex flex-col md:flex-row gap-5 w-full items-center'>
                       <li className='flex items-center h-17 gap-2'>
                          <div className='w-16 h-16 duration-300 hover:scale-125'>
-                         <CircularProgressbar  value={86} text={`${86}%`} background backgroundPadding={6} 
+                          
+                         <CircularProgressbar  value={data.vote_average.toFixed(1)*10} text={`${data.vote_average.toFixed(1)*10}%`} background backgroundPadding={6} 
                           styles={buildStyles({
                               backgroundColor: "#081c22",
                               textColor: "#fff",
@@ -88,7 +105,7 @@ export default function Detail  () {
                       <li> <IconButton><AiFillHeart /></IconButton></li>
                       <li> <IconButton><FaBookmark /> </IconButton></li>
                       <li> <IconButton> <AiFillStar /> </IconButton></li>
-                      <li > <a href="www.youtube.com" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a></li>
+                      {data.video && <li > <a href="www.youtube.com" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a></li>}
                     </ul> : 
                     <div className='w-full flex flex-col gap-5'>
                        <div className='w-full flex justify-around'>
@@ -106,7 +123,7 @@ export default function Detail  () {
                               </div>
                               <div className='font-bold'> User <br />Score</div>
                           </div>
-                          <a href="" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a>
+                          {data.video && <a href="" className='flex items-center text-center text-lg font-bold'><BsPlayFill className='mr-1' />  Play Trailer</a>}
                        </div>
                        <div className='flex justify-around w-full'>
                         <IconButton><FaListUl /></IconButton>
@@ -117,9 +134,9 @@ export default function Detail  () {
                     </div>
                     }
                     <div className='text-white w-full'>
-                      <h4 className='opacity-70 italic text-lg font-normal'>Every ending has a beginning.</h4>
+                      <h4 className='opacity-70 italic text-lg font-normal'>{data.tagline}</h4>
                       <h2 className='text-lg font-bold my-2'>Overview</h2>
-                      <p>When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.</p>
+                      <p>{data.overview}</p>
 
                       <ol className='flex w-full mt-7'>
                         <li className='w-1/3'>
@@ -142,7 +159,7 @@ export default function Detail  () {
       </div>
 
       </div>
-    </section>
+    </section> : "loading"}
     <section className='w-full h-auto my-10'>
       <div className="container mx-auto">
         <div className='md:w-3/4 md:max-w-3/4 w-full px-2'>

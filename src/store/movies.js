@@ -2,29 +2,41 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from "../utils/api"
 
 
-
+const initialState =  {
+  popular :{
+    data : null,
+    loading : false,
+    error :""
+  },
+  genres:{
+    data:null,
+    loading:false,
+    error:""
+  },
+  detail:{
+    data:null,
+    loading:false,
+    error:""
+  }
+}
 
 
 export const fetchPopuler = createAsyncThunk("fetchPopuler", async () =>{
-  const response = await api().get("movie/popular");
+  const response = await api().get("movie/popular?&language=tr");
   return response.data.results
+})
+export const fetchGenres = createAsyncThunk("fetchGenres",async () =>{
+  const response = await api().get("genre/movie/list?&language=tr")
+  return response.data.genres
+})
+export const fetchMovieDetail = createAsyncThunk("fetchMovieDetail",async(movieID)=>{
+  const response = await api().get(`/movie/${movieID}?&language=tr`)
+  return response.data
 })
 
 export const moviesSlice = createSlice({
   name: 'movies',
-  initialState: {
-    list: [{"name":"Stranger Things","country":"USA","date":"2016 - Current","imdb":"86/100","img":"st.jpg","Category":["Action","Adventure","Horror"]},
-    {"name":"Batman Begins","country":"USA","date":"2005","imdb":"82/100","img":"batman.jpg","Category":["Action","Adventure"]},
-    {"name":"Spider-Man : Into The Spider Verse","country":"USA","date":"2018","imdb":"86/100","img":"spiderman.jpg","Category":["Action","Adventure","Animation"]},
-    {"name":"Dunkirk","country":"USA","date":"2017","imdb":"86/100","img":"dunkirk.jpg","Category":["Action","Drama","History"]},
-    {"name":"Spider-Man : Into The Spider Verse","country":"USA","date":"2018","imdb":"86/100","img":"spiderman.jpg","Category":["Action","Adventure","Animation"]},
-    ],
-    popular :{
-      data : null,
-      loading : false,
-      error :""
-    }
-  },
+  initialState,
   reducers: {
   },
   extraReducers : (builder) =>{
@@ -37,8 +49,35 @@ export const moviesSlice = createSlice({
       state.popular.loading = false
     })
     builder.addCase(fetchPopuler.rejected,(state,action)=>{
-      state.populer.loading = false
+      state.popular.loading = false
       state.error = "Movieler alanımadı"
+
+    })
+    builder.addCase(fetchGenres.pending,( state,action)=>{
+      state.genres.loading = true
+      state.genres.error =  ""
+    })
+    builder.addCase(fetchGenres.fulfilled, (state,action)=>{
+      state.genres.data = action.payload
+      state.genres.loading = false
+    })
+    builder.addCase(fetchGenres.rejected,(state,action)=>{
+      state.genres.loading = false
+      state.genres.error = "Kategoriler alanımadı"
+
+    })
+    builder.addCase(fetchMovieDetail.pending,( state,action)=>{
+      state.detail.loading = true
+      state.detail.error =  ""
+      state.detail.data = null
+    })
+    builder.addCase(fetchMovieDetail.fulfilled, (state,action)=>{
+      state.detail.data = action.payload
+      state.detail.loading = false
+    })
+    builder.addCase(fetchMovieDetail.rejected,(state,action)=>{
+      state.detail.loading = false
+      state.detail.error = "Kategoriler alanımadı"
 
     })
   }

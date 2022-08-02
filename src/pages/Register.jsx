@@ -1,29 +1,29 @@
-import React, { useState } from 'react'
+import React from 'react'
 import google from '../img/google.svg'
 import facebook from '../img/Facebook.svg'
 import apple from '../img/Apple.svg'
 import Input from '../components/Input'
-import { useDispatch,useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { nanoid } from 'nanoid'
 import { addUsers } from '../store/users'
-import { useNavigate } from 'react-router-dom'
+import {Formik, Form} from "formik";
+import {RegisterSchema} from "../validation";
+
+
 
 const Register = () => {
    const dispatch = useDispatch();
-   const [email,setEmail] = useState('');
-   const [password,setPassword] = useState(''); 
-   const {users} = useSelector(state => state.users)
-   const navigate = useNavigate()
-   const handleSubmit = (e) =>{
-    e.preventDefault()
-    const user = {
-        id : nanoid(),
-        email : email,
-        password : password
-    }
-    const request = dispatch(addUsers(user))
-    navigate("/login")
+   const handleSubmit = async (values, actions) =>{
+    
+        const user = {
+            id : nanoid(),
+            email : values.email,
+            password : values.password
+        }
+      await dispatch(addUsers(user))
+          
    }
+ 
 
   return (
     <div className='w-full h-full'>
@@ -51,15 +51,28 @@ const Register = () => {
                 <span className="px-4 text-[13px] text-[#D9D9D9] font-semibold">Or</span>
                 <div className="h-px bg-gray-300 flex-1"/>
 		    </div>
-            <form className='w-full' onSubmit={handleSubmit} >
-            <div className='flex flex-col gap-y-4 w-full'>
-                <Input id="email" type='email' label="Email address" req="true" onChange={(e)=>setEmail(e.target.value)} value={email}/>
-                <Input id="sifre"  type="password" label="Password"  req="true" onChange={(e)=>setPassword(e.target.value)} value={password}/>
-            </div>
-            <button type='submit' className='w-full bg-[#2F80ED] py-4 text-white mt-6 rounded-md font-medium text-xl hover:shadow-lg'>
-                Register
-            </button>
-            </form>
+            <Formik         
+                          initialValues={{ email: '', password: '' }}  
+                          validationSchema={RegisterSchema}
+                           onSubmit={handleSubmit}
+       
+     >
+       {({isSubmitting,isValid, dirty}) => (
+            
+            <Form className='w-full'  >
+                <div className='flex flex-col gap-y-4 w-full'>
+                    <Input id="email" type='email' label="Email address" name="email"/>
+                    <Input id="sifre" type="password" label="Password" name="password"/>
+                </div>
+                
+                <button type='submit' disabled={!isValid || !dirty || isSubmitting} className='w-full bg-[#2F80ED] py-4 text-white mt-6 rounded-md font-medium text-xl   disabled:bg-[#2F80ED]/10' >
+                    Register
+                </button>
+            </Form>
+            
+            )}
+            </Formik>
+
         </div>
         
     </div>

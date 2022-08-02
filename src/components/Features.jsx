@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Card from '../components/Card';
 import Title from './Title';
 import Slider from "react-slick";
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { fetchPopuler } from '../store/movies';
 
 
 function NextButton ({ onClick, className }) {
@@ -24,9 +25,12 @@ function PrevButton ({ onClick, className }) {
 
 
 export default function Features (){
-	const features = useSelector((state) => state.movies.list)
-
-
+	const {data,error,loading} = useSelector(state =>state.movies.popular)
+	const dispatch = useDispatch()
+	useEffect(()=>{
+		dispatch(fetchPopuler())
+	},[])
+	
     const settings = {
 		dots: false,
 		infinite: true,
@@ -56,15 +60,21 @@ export default function Features (){
 	};
   
     return(
-        <section className='max-w-[1240px]  md:px-0 px-10'>
-            <Title title="Features" />
-            <div  className="mx-auto my-4 "> 
-			<Slider {...settings} >
+   
+	
+		 <section className='max-w-[1240px]  md:px-0 px-10'>
+				<Title title="Features" />
+				<div  className="mx-auto my-4 "> 
+				{ loading ? "loading...":
+				<Slider {...settings} >
+					{ data && data.map((movie)=><Card key={movie.id} item={movie}/>)}
+					</Slider>
+				} 	
+			</div>
+		</section>
+	
+	
 
-				{features.map((feature)=><Card item={feature}/>)}
-					
-				</Slider>
-        </div>
-    </section>
+	
     )
 }

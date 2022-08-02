@@ -2,21 +2,17 @@ import React, { useEffect } from 'react'
 import Arrival from '../components/Arriwal';
 import Features from '../components/Features';
 import Header from '../components/Header';
-import { useSelector,useDispatch } from 'react-redux';
-import { fetchPopuler } from '../store/movies';
-
-
+import { useDispatch } from 'react-redux';
+import { fetchGenres } from '../store/movies';
 
 export default function Home()  {
   
-  const {data,error,loading} = useSelector(state =>state.movies.popular)
   const dispatch = useDispatch()
   useEffect(()=>{
-    dispatch(fetchPopuler())
-    
+    dispatch(fetchGenres())
   },[])
   
-  console.log(data)
+  
    
   return (
     <>
@@ -27,7 +23,7 @@ export default function Home()  {
     </section>
     <div className='max-w-[1280px] mx-auto space-y-10 mt-10'>
       <Features />
-      <Arrival />
+      
       
     </div>
      
