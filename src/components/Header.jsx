@@ -4,11 +4,18 @@ import { FaSearch } from 'react-icons/fa';
 import { AiOutlineMenu,AiOutlineClose } from "react-icons/ai";
 import { BiMoviePlay } from "react-icons/bi";
 import cn from "classnames"
+import { useDispatch,useSelector } from "react-redux";
+import { searchMovie } from "../store/movies";
+import speakingurl from "speakingurl"
+import moment from 'moment';
 
 const Header = ( {bgImg = false}) => {
   const [scroll, setScroll] = useState(false);
   const [show,setShow] = useState(false);
+  const [query,setQuery] = useState("")
   const headerRef = useRef()
+  const {data,error,loading} = useSelector(state => state.movies.search)
+  const dispatch = useDispatch()
   useEffect(()=>{
     window.addEventListener("scroll", () => {
       setScroll(window.scrollY > 50);
@@ -24,7 +31,10 @@ const Header = ( {bgImg = false}) => {
     });
   },[])
  
-  
+  const search = (e) =>{
+    setQuery(e.target.value)
+    dispatch(searchMovie(query))
+  } 
 
 
   return (
@@ -38,10 +48,43 @@ const Header = ( {bgImg = false}) => {
                   <BiMoviePlay />
                MovieBox
             </Link>
-              <div className=" w-2/3 justify-between items-center lg:flex hidden">
+              <div className=" w-2/3 justify-between items-center lg:flex hidden ">
                 <div className={`w-[520px] h-9 relative` }>
-                  <input type='text' className={` ${ bgImg ? 'md:text-white' : 'md:text-black'} ${scroll && 'md:text-black'}   w-full bg-transparent peer focus:ring-[#2F80ED] focus:border-[#2F80ED] block shadow-sm sm:text-sm border-gray-300 rounded-md`}/>
-                  <FaSearch className={`text-gray-300 absolute top-0 right-0 -translate-x-3 translate-y-3 peer-focus:text-[#2F80ED]`} />
+                  <input value={query} onChange={search} type='text' className={` ${ bgImg ? 'md:text-white' : 'md:text-black'} ${scroll && 'md:text-black'}   w-full bg-transparent  focus:ring-[#2F80ED] focus:border-[#2F80ED] block shadow-sm sm:text-sm border-gray-300 rounded-md peer`}/>
+                  <FaSearch className={`text-gray-300 absolute top-0 right-0 -translate-x-3 translate-y-3 w-4 h-4 peer-focus:text-[#2F80ED]`} />
+                  <div className="bg-white text-black  absolute top-full left-0 max-h-[350px] overflow-y-scroll   z-50 w-full mt-[2px] rounded-b-md scrollbar snap-x ">
+                  {!loading ? data.map((d)=>{
+                      let media = ""
+                      switch (d.media_type) {
+                        case "movie":
+                          media = "Movie"
+                          break;
+                        case "tv":
+                            media = "TV Series"
+                            break;
+                        case "person":
+                          media = "Actor"
+                          break;
+                        default:
+                          break;
+                      }
+                      return(
+                        <Link key={d.id} to={`/detail/${d.id}-${speakingurl(d.original_title || d.name)}`} className="relative snap-center">
+                        <div className="px-[20px] py-[18px] flex gap-3 relative hover:before:content-[''] hover:before:w-2 hover:before:h-[100] hover:before:bg-[#6F32F1] hover:before:-ml-[20px] hover:before:rounded-r-md">
+                          <figure className="w-[50px] h-auto">
+                          <img src={`https://image.tmdb.org/t/p/original/${d.poster_path || d.profile_path}`} alt="" className="rounded h-full"  />
+                          <figcaption className="hidden">{d.original_title || d.name}.</figcaption>
+                          </figure>
+                         <div className="flex flex-col">
+                          <h2 className="font-semibold text-lg"> {d.original_title || d.name}</h2>
+                          <span className="font-semibold text-sm text-[#888888]">{media}</span>
+                          <span className="font-semibold text-sm text-[#888888] mt-auto">{d.first_air_date && moment(d.first_air_date).format("LL") || d.release_date && moment(d.release_date).format("LL") }</span>
+                         </div>
+                        </div>
+                        </Link>
+                      )
+                    }) : <h1 className="p-10 text-center h-full w-full">Loading...</h1>}
+                    </div>
                 </div>
                 <Link to={'/login'} className='w-[114px] h-[45px]  inline-flex justify-center items-center px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2F80ED] hover:bg-[#2F80ED]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2F80ED]/80'>Sign in</Link>
                 
@@ -54,10 +97,10 @@ const Header = ( {bgImg = false}) => {
 
           </div>
         </nav>
-        <div className={`${show ? 'flex' : 'hidden'} transition  duration-500 relative mx-2 my-3 flex-col space-y-4`}>
+        <div className={`${show ? 'flex' : 'hidden'} transition  duration-500 relative px-4 my-3 flex-col space-y-4`}>
          <div>
-            <input type='text' className={`${scroll && 'text-black'} w-full bg-transparent peer focus:ring-[#2F80ED] focus:border-[#2F80ED] block shadow-sm sm:text-sm border-gray-300 rounded-md`}/>
-            <FaSearch className={`${scroll && 'text-gray-300'} absolute top-0 right-0 -translate-x-3 translate-y-3 peer-focus:text-[#2F80ED]`} />     
+            <input type='text' className={`${scroll && 'text-black'} w-full bg-transparent peer px-3 focus:ring-[#2F80ED] focus:border-[#2F80ED] block shadow-sm sm:text-sm border-gray-300 rounded-md`}/>
+            <FaSearch className={`${scroll && 'text-gray-300'} absolute top-0 right-3 -translate-x-3 translate-y-3 peer-focus:text-[#2F80ED]`} />     
           </div>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2F80ED] hover:bg-[#2F80ED]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2F80ED]/80"> Sign in</button>   
         </div>

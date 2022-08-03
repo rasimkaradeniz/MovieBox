@@ -62,7 +62,7 @@ export default function Features (){
     return(
    
 	
-		 <section className='max-w-[1240px]  md:px-0 px-10'>
+		 <section className='md:max-w-[1240px] max-w-full w-full  md:px-0 px-10'>
 				<Title title="Features" />
 				<div  className="mx-auto my-4 "> 
 				{ loading ? "loading...":

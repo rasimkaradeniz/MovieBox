@@ -17,6 +17,10 @@ const initialState =  {
     data:null,
     loading:false,
     error:""
+  },search:{
+    data:null,
+    loading:false,
+    error:""
   }
 }
 
@@ -32,6 +36,11 @@ export const fetchGenres = createAsyncThunk("fetchGenres",async () =>{
 export const fetchMovieDetail = createAsyncThunk("fetchMovieDetail",async(movieID)=>{
   const response = await api().get(`/movie/${movieID}?&language=tr`)
   return response.data
+})
+
+export const searchMovie = createAsyncThunk("searchMovie",async(query)=>{
+  const response =await api().get(`/search/multi?page=1&query=${query}`)
+  return response.data.results
 })
 
 export const moviesSlice = createSlice({
@@ -78,6 +87,19 @@ export const moviesSlice = createSlice({
     builder.addCase(fetchMovieDetail.rejected,(state,action)=>{
       state.detail.loading = false
       state.detail.error = "Kategoriler alanımadı"
+
+    })
+    builder.addCase(searchMovie.pending,( state,action)=>{
+      state.search.loading = true
+      state.search.error =  ""
+    })
+    builder.addCase(searchMovie.fulfilled, (state,action)=>{
+      state.search.data = action.payload
+      state.search.loading = false
+    })
+    builder.addCase(searchMovie.rejected,(state,action)=>{
+      state.search.loading = false
+      state.search.error = "Kategoriler alanımadı"
 
     })
   }

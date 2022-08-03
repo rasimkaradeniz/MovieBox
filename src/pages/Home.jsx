@@ -21,7 +21,7 @@ export default function Home()  {
       <div className=" w-full h-[600px] bg-cover bg-center md:bg-top	 bg-hero-pattern">
       </div>
     </section>
-    <div className='max-w-[1280px] mx-auto space-y-10 mt-10'>
+    <div className='md:max-w-[1240px] max-w-full w-full mx-auto space-y-10 mt-10'>
       <Features />
       
       
