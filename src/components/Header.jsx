@@ -15,7 +15,9 @@ const Header = ( {bgImg = false}) => {
   const [query,setQuery] = useState("")
   const headerRef = useRef()
   const {data,error,loading} = useSelector(state => state.movies.search)
+  const [result,setResult] = useState([])
   const dispatch = useDispatch()
+  const [showSearch,setShowSearch] = useState(true)
   useEffect(()=>{
     window.addEventListener("scroll", () => {
       setScroll(window.scrollY > 50);
@@ -31,10 +33,20 @@ const Header = ( {bgImg = false}) => {
     });
   },[])
  
-  const search = (e) =>{
-    setQuery(e.target.value)
-    dispatch(searchMovie(query))
-  } 
+  const search = async (e) =>{
+    const value = e.target.value
+    if(value.trim().length >0){
+      setQuery(value)
+      await dispatch(searchMovie(query))
+      setResult(data)
+    }else{
+      setQuery(value)
+      setResult([])
+    }
+  }
+  useEffect(()=>{
+    setResult(data)
+  },[data])
 
 
   return (
@@ -48,12 +60,12 @@ const Header = ( {bgImg = false}) => {
                   <BiMoviePlay />
                MovieBox
             </Link>
-              <div className=" w-2/3 justify-between items-center lg:flex hidden ">
-                <div className={`w-[520px] h-9 relative` }>
-                  <input value={query} onChange={search} type='text' className={` ${ bgImg ? 'md:text-white' : 'md:text-black'} ${scroll && 'md:text-black'}   w-full bg-transparent  focus:ring-[#2F80ED] focus:border-[#2F80ED] block shadow-sm sm:text-sm border-gray-300 rounded-md peer`}/>
+              <div className=" w-2/3 justify-between items-center lg:flex hidden " >
+                <div className={`w-[520px] h-9 relative` } onBlur={(e)=>{if(!e.currentTarget.contains(e.relatedTarget)){setShowSearch(false)}}}  onFocus={(e)=>{if(query.length>0){setShowSearch(true)}}}>
+                  <input value={query} onChange={search} type='text' className={` ${ bgImg ? 'md:text-white' : 'md:text-black'} ${scroll && 'md:text-black'}   w-full bg-transparent peer  focus:ring-[#2F80ED] focus:border-[#2F80ED] block shadow-sm sm:text-sm border-gray-300 rounded-md peer`}/>
                   <FaSearch className={`text-gray-300 absolute top-0 right-0 -translate-x-3 translate-y-3 w-4 h-4 peer-focus:text-[#2F80ED]`} />
-                  <div className="bg-white text-black  absolute top-full left-0 max-h-[350px] overflow-y-scroll   z-50 w-full mt-[2px] rounded-b-md scrollbar snap-x ">
-                  {!loading ? data.map((d)=>{
+                  {showSearch && <div className={`bg-white text-black  absolute top-full left-0 max-h-[350px] overflow-y-scroll   z-50 w-full mt-[2px] rounded-b-md scrollbar snap-x ${query.trim().length > 0 ? "visible" : "invisible" }`}>
+                  {result.length > 0  ? result.map((d)=>{
                       let media = ""
                       switch (d.media_type) {
                         case "movie":
@@ -69,7 +81,7 @@ const Header = ( {bgImg = false}) => {
                           break;
                       }
                       return(
-                        <Link key={d.id} to={`/detail/${d.id}-${speakingurl(d.original_title || d.name)}`} className="relative snap-center">
+                        <Link key={d.id} to={`/detail/${d.media_type}/${d.id}-${speakingurl(d.original_title || d.name)}`} className="relative snap-center">
                         <div className="px-[20px] py-[18px] flex gap-3 relative hover:before:content-[''] hover:before:w-2 hover:before:h-[100] hover:before:bg-[#6F32F1] hover:before:-ml-[20px] hover:before:rounded-r-md">
                           <figure className="w-[50px] h-auto">
                           <img src={`https://image.tmdb.org/t/p/original/${d.poster_path || d.profile_path}`} alt="" className="rounded h-full"  />
@@ -84,7 +96,7 @@ const Header = ( {bgImg = false}) => {
                         </Link>
                       )
                     }) : <h1 className="p-10 text-center h-full w-full">Loading...</h1>}
-                    </div>
+                    </div>}
                 </div>
                 <Link to={'/login'} className='w-[114px] h-[45px]  inline-flex justify-center items-center px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2F80ED] hover:bg-[#2F80ED]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2F80ED]/80'>Sign in</Link>
                 

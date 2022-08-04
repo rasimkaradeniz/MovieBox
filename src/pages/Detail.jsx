@@ -9,8 +9,9 @@ import { CircularProgressbar,buildStyles  } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 import { useDispatch,useSelector } from 'react-redux';
-import {  fetchMovieDetail } from '../store/movies';
+import {  fetchMovieDetail, fetchTvDetail } from '../store/movies';
 import { useParams } from 'react-router-dom';
+import imdb from '../img/imdb.svg'
 
 
 export default function Detail  () {
@@ -19,16 +20,36 @@ export default function Detail  () {
   const [gradient,setGradient] = useState('');
   const [mobil,setMobil] = useState(false);
   const [w, setW] = useState(window.innerWidth)
-  const {id} = useParams()
+  const {type,id} = useParams()
   const dispatch = useDispatch()
-  const {data,loading,error} =useSelector(state => state.movies.detail)
+  const {data,loading,error,cast} =useSelector(state => state.movies.detail)
   useEffect(()=>{
-    dispatch(fetchMovieDetail(id))
-    
-  },[])
+        switch (type) {
+          case "movie":
+            dispatch(fetchMovieDetail(id))
+            break;
+          default:
+            break;
+        }
+        
+      },[])
   useEffect(()=>{
-    dispatch(fetchMovieDetail(id))
+    switch (type) {
+      case "movie":
+        dispatch(fetchMovieDetail(id))
+        break;
+      case "tv":
+        dispatch(fetchTvDetail(id))
+        break;
+      default:
+        break;
+    }
+       
   },[id])
+
+   
+    
+ 
   
   data && prominent(`https://image.tmdb.org/t/p/w1280/${data.backdrop_path}`, { amount: 2 }).then(color => {
     setGradient(`linear-gradient(to right, rgb(${color[0][0]}, ${color[0][1]}, ${color[0][2]}) 150px, rgba(${color[1][0]}, ${color[1][1]}, ${color[1][2]}, 0.84) 100%)`)
@@ -78,7 +99,7 @@ export default function Detail  () {
               <div className='flex text-white mt-14 w-full  md:mt-0' style={{backgroundImage:mobil && gradient}}>
                   <div className='md:pl-10 px-5 py-3 md:px-0 md:py-0  flex flex-wrap content-center items-center gap-7'>
                     <div className='w-full  text-white '>
-                      <h1 className='text-4xl font-bold'>{data.original_title}</h1>
+                      <h1 className='text-4xl font-bold'>{data.original_title || data.name}</h1>
                       {data.genres.map((category,key)=>{
                        let length = data.genres.length
                         return (
@@ -135,6 +156,11 @@ export default function Detail  () {
                        </div>
                     </div>
                     }
+                    {data.imdb_id && <div className='mt-3'>
+                      <a href={`https://www.imdb.com/title/${data.imdb_id}`} target="_blank">
+                        <img src={imdb} alt=""  width={50} height={50}/>
+                      </a>
+                    </div>}
                     <div className='text-white w-full'>
                       <h4 className='opacity-70 italic text-lg font-normal'>{data.tagline}</h4>
                       <h2 className='text-lg font-bold my-2'>Overview</h2>
@@ -170,118 +196,25 @@ export default function Detail  () {
           </div>
           <div className='mt-3 relative'>
             <ul ref={scroll} className="flex gap-3 scrollbar  relative overflow-x-scroll overflow-y-hidden pb-3 ">
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/rymbG27dRdRldtjZz3JfNpUT7A1.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/8Se6WZuvRmoB990bT29OPgVAyBo.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/chPekukMF5SNnW6b22NbYPqAStr.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/v30xviO4bvD9ex6CNdfB2XtVgRb.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/p0ayyuQWPnTvbCaN7E2ROetuLVs.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/yanRypHyaFRgTn31fwq8xzcfSHg.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/xKXJtSOcgGmzSXExU6kz2FXAysC.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
-              <li>
-                <div className="w-[140px] m-w-[140px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" className='m-w-[138px] w-[138px] h-[175px] block'>
-                        <img className="rounded-t-lg h-full" src="https://www.themoviedb.org/t/p/w138_and_h175_face/cQaa3XEiUTgJxp85VeFYFyblJIH.jpg" alt="" />
-                    </a>
-                    <div className="py-3 px-3">
-                        <a href="#">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">Winona Ryder</h5>
-                        </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Joyce Byers</p>
-                        
-                    </div>
-                </div>
-              </li>
+              {cast && cast.slice(0,12).map((c)=>{
+                return(
+                  <li>
+                  <div className="w-[140px] m-w-[140px] min-h-full bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                      <a href="#" className='m-w-[138px] w-[138px] h-[175px]  block'>
+                          <img className="rounded-t-lg h-full w-full" src={`https://image.tmdb.org/t/p/original/${c.profile_path}`} alt="" />
+                      </a>
+                      <div className="py-3 px-3">
+                          <a href="#">
+                              <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">{c.name}</h5>
+                          </a>
+                          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{c.character}</p>
+                          
+                      </div>
+                  </div>
+                </li>
+                )
+              })}
+              
               
             </ul>
             <span ref={after} className='ease-in-out w-16 h-full absolute top-0 right-0 bg-shadow-img will-change-scroll pointer-events-none'></span>

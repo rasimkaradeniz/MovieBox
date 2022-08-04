@@ -4,7 +4,7 @@ import Title from './Title';
 import Slider from "react-slick";
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import { useSelector,useDispatch } from 'react-redux';
-import { fetchPopuler } from '../store/movies';
+import {  fetchPopulerTv } from '../store/movies';
 
 
 function NextButton ({ onClick, className }) {
@@ -24,11 +24,11 @@ function PrevButton ({ onClick, className }) {
 }
 
 
-export default function Features (){
-	const {data,error,loading} = useSelector(state =>state.movies.popular)
+export default function TV (){
+	const {data,error,loading} = useSelector(state =>state.movies.populartv)
 	const dispatch = useDispatch()
 	useEffect(()=>{
-		dispatch(fetchPopuler())
+		dispatch(fetchPopulerTv())
 	},[])
 	
     const settings = {
@@ -63,11 +63,11 @@ export default function Features (){
    
 	
 		 <section className='md:max-w-[1240px] max-w-full w-full  md:px-0 px-10'>
-				<Title title="Populer Movies" />
+				<Title title="Populer TV Series" />
 				<div  className="mx-auto my-4 "> 
 				{ loading ? "loading...":
 				<Slider {...settings} >
-					{ data && data.map((movie)=><Card key={movie.id} type="movie" item={movie}/>)}
+					{ data && data.map((movie)=><Card key={movie.id} type="tv" item={movie}/>)}
 					</Slider>
 				} 	
 			</div>
