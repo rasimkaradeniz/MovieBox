@@ -61,8 +61,12 @@ export const fetchMovieDetail = createAsyncThunk("fetchMovieDetail",async(movieI
   return returnArray
 })
 export const fetchTvDetail = createAsyncThunk("fetchTvDetail",async(tvID)=>{
+  const returnArray = []
   const response = await api().get(`/tv/${tvID}?&language=tr`)
-  return response.data
+  const cast = await api().get(`/tv/${tvID}/credits`)
+  returnArray.push(response.data)
+  returnArray.push(cast.data.cast)
+  return returnArray
 })
 
 
@@ -149,9 +153,11 @@ export const moviesSlice = createSlice({
       state.detail.loading = true
       state.detail.error =  ""
       state.detail.data = null
+      state.detail.cast=null
     })
     builder.addCase(fetchTvDetail.fulfilled, (state,action)=>{
-      state.detail.data = action.payload
+      state.detail.data = action.payload[0]
+      state.detail.cast = action.payload[1]
       state.detail.loading = false
     })
     builder.addCase(fetchTvDetail.rejected,(state,action)=>{

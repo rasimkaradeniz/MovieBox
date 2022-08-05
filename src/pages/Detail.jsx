@@ -12,11 +12,11 @@ import { useDispatch,useSelector } from 'react-redux';
 import {  fetchMovieDetail, fetchTvDetail } from '../store/movies';
 import { useParams } from 'react-router-dom';
 import imdb from '../img/imdb.svg'
+import ListSlider from '../components/ListSlider';
 
 
 export default function Detail  () {
-  const scroll = useRef()
-  const after = useRef()
+  
   const [gradient,setGradient] = useState('');
   const [mobil,setMobil] = useState(false);
   const [w, setW] = useState(window.innerWidth)
@@ -28,10 +28,15 @@ export default function Detail  () {
           case "movie":
             dispatch(fetchMovieDetail(id))
             break;
+          case "tv":
+            dispatch(fetchTvDetail(id))
+            break;
           default:
             break;
         }
-        
+        if(w < 768){
+          setMobil(true)
+        }
       },[])
   useEffect(()=>{
     switch (type) {
@@ -55,20 +60,7 @@ export default function Detail  () {
     setGradient(`linear-gradient(to right, rgb(${color[0][0]}, ${color[0][1]}, ${color[0][2]}) 150px, rgba(${color[1][0]}, ${color[1][1]}, ${color[1][2]}, 0.84) 100%)`)
   })
   
-  useEffect(()=>{
-    if(scroll && scroll.current){
-      scroll.current.addEventListener("scroll", () => {
-        if(scroll.current.scrollLeft >40){
-          after.current.style.opacity = "0"
-        }else{
-          after.current.style.opacity = "100"
-        }
-      });
-    }
-    if(w < 768){
-      setMobil(true)
-    }
-  },[])
+  
   
   window.addEventListener('resize',function(){
     setW(window.innerWidth);
@@ -191,34 +183,7 @@ export default function Detail  () {
     <section className='w-full h-auto my-10'>
       <div className="container mx-auto">
         <div className='md:w-3/4 md:max-w-3/4 w-full px-2'>
-          <div>
-            <h2 className='font-semibold text-2xl'>Series Cast</h2>
-          </div>
-          <div className='mt-3 relative'>
-            <ul ref={scroll} className="flex gap-3 scrollbar  relative overflow-x-scroll overflow-y-hidden pb-3 ">
-              {cast && cast.slice(0,12).map((c)=>{
-                return(
-                  <li>
-                  <div className="w-[140px] m-w-[140px] min-h-full bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                      <a href="#" className='m-w-[138px] w-[138px] h-[175px]  block'>
-                          <img className="rounded-t-lg h-full w-full" src={`https://image.tmdb.org/t/p/original/${c.profile_path}`} alt="" />
-                      </a>
-                      <div className="py-3 px-3">
-                          <a href="#">
-                              <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">{c.name}</h5>
-                          </a>
-                          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{c.character}</p>
-                          
-                      </div>
-                  </div>
-                </li>
-                )
-              })}
-              
-              
-            </ul>
-            <span ref={after} className='ease-in-out w-16 h-full absolute top-0 right-0 bg-shadow-img will-change-scroll pointer-events-none'></span>
-          </div>
+          <ListSlider title={"Series Cast"} data={cast} />
           
         </div>
          <div className='mt-4 md:px-0 px-2 pb-20'>

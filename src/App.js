@@ -4,6 +4,7 @@ import Detail from './pages/Detail.jsx';
 
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Person from "./pages/Person.jsx";
 
 function App() {
   return (
@@ -13,10 +14,9 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="detail/:type/:id" element={<Detail />} />
       <Route path="detail/:type/:id-:name" element={<Detail />} />
-        
- 
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
+      <Route path="profile" element={<Person />} />
     </Routes>
   </>
   );
