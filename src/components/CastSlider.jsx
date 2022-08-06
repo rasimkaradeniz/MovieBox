@@ -6,12 +6,11 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BsCardImage } from 'react-icons/bs';
 
 
-const ListSlider = ({title,data,type="series"}) => {
+const CastSlider = ({title,data}) => {
     const scroll = useRef()
     const after = useRef()
     const [w, setW] = useState(window.innerWidth)
     const [mobil,setMobil] = useState(false);
-
     useEffect(()=>{
         if(scroll && scroll.current){
           scroll.current.addEventListener("scroll", () => {
@@ -42,22 +41,21 @@ const ListSlider = ({title,data,type="series"}) => {
           <div className='mt-3 relative'>
             <ul ref={scroll} className="flex gap-3 scrollbar  relative overflow-x-scroll overflow-y-hidden pb-3 ">
               {data && data.slice(0,12).map((c,key)=>{
-                
+                 let type = c.first_air_date ? "tv" : "movie"   
                 return(
                   <li key={key}>
-                  <div className="w-[140px] m-w-[140px] min-h-full bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                      <Link to={`/profile/${c.id}/${speakingurl(c.name)}`} className='max-w-[138px] w-[138px] h-[175px] max-h-[175px] min-w-[138px] block'>
-                        { c.profile_path ?
-                          <LazyLoadImage src={`https://image.tmdb.org/t/p/original/${c.profile_path}`}  effect="blur"  className='rounded-t-lg h-full w-full max-h-[175px] min-w-[138px]'  />:
-                          <div className="w-full h-full grid place-items-center"><BsCardImage className=' text-5xl' /></div>
-
-                        }
+                  <div className="w-[130px] max-w-[190px] min-h-full bg-trasparent rounded-lg  ">
+                      <Link to={`/detail/${type}/${c.id}-${speakingurl(c.title)}`} className='max-w-[190px] w-[130px] h-[195px]  block'>
+                          {c.backdrop_path ? <LazyLoadImage src={`https://image.tmdb.org/t/p/w150_and_h225_bestv2/${c.backdrop_path}`}  effect="blur"  className='rounded-lg h-full w-full'  />:
+                                                    <div className="w-full h-full grid place-items-center"><BsCardImage className=' text-5xl' /></div>
+                                                  }
+                          
                       </Link>
                       <div className="py-3 px-3">
-                          <Link to={`/profile/${c.id}/${speakingurl(c.name)}`}>
-                              <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">{c.name}</h5>
+                          <Link to={`/detail/${type}/${c.id}-${speakingurl(c.title)}`}>
+                              <h5 className="mb-2 text-sm  tracking-tight text-gray-900 dark:text-white text-center">{c.title}</h5>
                           </Link>
-                          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{c.character}</p>
+                          
                           
                       </div>
                   </div>
@@ -73,4 +71,4 @@ const ListSlider = ({title,data,type="series"}) => {
   )
 }
 
-export default ListSlider
+export default CastSlider

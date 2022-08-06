@@ -1,28 +1,57 @@
-import ListSlider from '../components/ListSlider';
 import React, { useEffect } from 'react'
 import { FaFacebookSquare, FaInstagram, FaTwitter } from 'react-icons/fa'
 import { SiImdb } from 'react-icons/si'
 import Header from '../components/Header'
 import { useDispatch,useSelector } from 'react-redux';
-import { fetchMovieDetail } from '../store/movies'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { fetchCast, fetchPersonDetail } from '../store/person';
+import CastSlider from '../components/CastSlider';
+import { BsCardImage } from 'react-icons/bs';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+
+
 
 
 function Person() {
-    const {cast} =useSelector(state => state.movies.detail)
+    const {data,error,loading} = useSelector(state=> state.person.detail)
+    const cast = useSelector(state => state.person.cast)
     const dispatch = useDispatch()
-   useEffect(()=>{
-    dispatch(fetchMovieDetail("299536"))
-   },[]) 
+    const {id} = useParams()
+    
+    
+
+    useEffect(()=>{
+        dispatch(fetchPersonDetail(id))
+        dispatch(fetchCast(id))
+        
+    },[]) 
+    useEffect(()=>{
+        dispatch(fetchPersonDetail(id))
+        dispatch(fetchCast(id))
+    },[id])
+
+    const age = (date) =>{
+         const today = new Date()
+         const birthDay = new Date(date)
+         const a = today.getFullYear() - birthDay.getFullYear()
+         return a
+    }
+
+
+    
+   
   return (
     <>
     <Header />
-    <div className='container mx-auto py-10 px-7 flex gap-5 flex-col md:flex-row'>
+    {!loading && 
+        <div className='container mx-auto py-10 px-7 flex gap-5 flex-col md:flex-row'>
         <section className='md:w-1/4 w-full '>
             <div className='w-full flex justify-center'>
                 <div className='md:h-[450px] md:block relative md:w-full w-[156px] h-[156px] rounded-lg'>
-                    <img src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/1d415X6XP9KXSKDAbDTsf8WwZO6.jpg" alt=""
-                    className='w-full min-w-full h-full border-0 outline-none block rounded-lg'/>
+                     {data.profile_path ?<LazyLoadImage src={`https://image.tmdb.org/t/p/original/${data.profile_path}`} effect="blur" className='w-[156px] h-[156px] min-w-full  border-0 outline-none block rounded-lg md:h-[450px] md:w-full'  />:
+                                                                         <div className="w-full h-full grid place-items-center"><BsCardImage className=' text-5xl' /></div>
+                                                                        }
                 </div>
             </div>
             
@@ -30,10 +59,10 @@ function Person() {
             
                 <div className='flex flex-col gap-3 justify-center items-center md:justify-start md:items-start'>
                     <h2 className='w-full font-bold text-black text-4xl md:hidden block text-center'>
-                            <a href="">Tom Holland</a>
+                            <a href="">{data.name}</a>
                     </h2>
                     <div className='flex gap-3'>
-                    <a href="" className=''>
+                    <a href={`https://www.imdb.com/name/${data.imdb_id}/`} className=''>
                         <SiImdb className='w-full h-full text-4xl hover:text-yellow-400' />
                     </a>
                     <a href="" className=''>
@@ -52,41 +81,31 @@ function Person() {
                     <div className='grid grid-cols-2 gap-2 md:block '>
                         <div className=''>
                             <h6 className='font-semibold'>Known For</h6>
-                            <p>Acting</p>
+                            <p>{data.known_for_department}</p>
                         </div>
-                        <div className=''>
-                            <h6 className='font-semibold'>Known Credits</h6>
-                            <p>42</p>
-                        </div>
+                        
                         <div className=''>
                             <h6 className='font-semibold'>Gender</h6>
-                            <p>Male</p>
+                            <p>{data.gender === 2 ? "Erkek" : "Kadın"}</p>
                         </div>
                         <div className=''>
                             <h6 className='font-semibold'>Birthday</h6>
-                            <p>1996-06-01 (26 years old)</p>
+                            <p>{data.birthday} ({age(data.birthday)} years old)</p>
                         </div>
                         <div className=''>
                             <h6 className='font-semibold'>Place of Birth</h6>
-                            <p>Surrey, England, UK</p>
+                            <p>{data.place_of_birth}</p>
                         </div>
                     </div>
                     <div className=''>
                         <h6 className='font-semibold'>Also Known As</h6>
-                        <ul className='space-y-2'>
-                            <li>Thomas Stanley Holland</li>
-                            <li>Том Холланд</li>
-                            <li>トム・ホランド</li>
-                            <li>톰 홀랜드</li>
-                            <li>توم هولاند</li>
-                            <li>ทอม ฮอลแลนด์</li>
-                            <li>汤姆·赫兰德</li>
-                            <li>Τομ Χόλαντ</li>
-                            <li>Том Голланд</li>
-                            <li>湯姆·霍蘭德</li>
-                            <li>טום הולנד</li>
-                            <li>תומאס סטנלי הולנד</li>
-                            <li>Nhện Đệ Tam</li>
+                        <ul className='space-y-2 md:flex md:flex-col grid grid-cols-2'>
+                           { data.also_known_as && data.also_known_as.map((asknow,key)=>{
+                                return(
+                                    <li key={key}>{asknow}</li>
+                                )
+                           })}
+                            
                         </ul>
                     </div>
                 </div>
@@ -95,17 +114,18 @@ function Person() {
         </section>
         <section className='md:w-3/4 w-full'>
             <h2 className='w-full font-bold text-black text-4xl md:block hidden'>
-                <Link to={""}>Tom Holland</Link>
+                <Link to={""}>{data.name}</Link>
             </h2>
             <div className='mt-8'>
                 <h3 className='font-semibold text-xl mb-2'>Biography</h3>
-                <p className='leading-relaxed text-left'>Thomas "Tom" Stanley Holland is an English actor and dancer. He is best known for playing Peter Parker / Spider-Man in the Marvel Cinematic Universe and has appeared as the character in six films: Captain America: Civil War (2016), Spider-Man: Homecoming (2017), Avengers: Infinity War (2018), Avengers: Endgame (2019), Spider-Man: Far From Home (2019), and Spider-Man: No Way Home (2021). He is also known for playing the title role in Billy Elliot the Musical at the Victoria Palace Theatre, London, as well as for starring in the 2012 film The Impossible.</p>
+                <p className='leading-relaxed text-left'>{data.biography}</p>
             </div>
             <div className='w-full mt-8'>
-                <ListSlider title='Known For' data={cast} />
+                {<CastSlider title='Known For' data={cast.data} />}
             </div>
         </section>
     </div>
+    }
     </>
   )
 }

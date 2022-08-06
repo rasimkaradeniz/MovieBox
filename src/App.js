@@ -5,6 +5,7 @@ import Detail from './pages/Detail.jsx';
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Person from "./pages/Person.jsx";
+import  CheckImage  from "./components/CheckImage.jsx";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
       <Route path="detail/:type/:id-:name" element={<Detail />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
-      <Route path="profile" element={<Person />} />
+      <Route path="profile/:id" element={<Person />} />
+      <Route path="profile/:id/:name" element={<Person />} />
     </Routes>
   </>
   );

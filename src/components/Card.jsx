@@ -4,6 +4,8 @@ import {useSelector} from "react-redux"
 import moment from 'moment';
 import speakingurl from "speakingurl"
 import imdb from '../img/imdb.svg'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 
 function Card({item,type}) {
@@ -25,7 +27,7 @@ function Card({item,type}) {
   return (
     <Link to={`/detail/${type}/${item.id}-${speakingurl(item.original_title)}`} className="snap-center">
     <div className="relative w-full md:w-[250px]  md:block flex flex-col snap-center justify-start items-start">
-        <img className="relative peer w-full   md:h-[375px]" src={`https://image.tmdb.org/t/p/original/${item.poster_path}`} alt="card" />
+        <LazyLoadImage src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}  effect="blur"  className='relative peer w-full md:h-[375px]'  />
         <div className="flex flex-col gap-3">
             <h6 className="text-xs text-gray-400 mt-3 font-bold ">{moment(item.release_date).format("LL")}</h6>
             <h3 className="text-lg leading-6 font-bold text-gray-900">{item.original_title || item.name}</h3>

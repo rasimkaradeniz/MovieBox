@@ -14,6 +14,10 @@ import { useParams } from 'react-router-dom';
 import imdb from '../img/imdb.svg'
 import ListSlider from '../components/ListSlider';
 
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import { Spinner } from 'flowbite-react';
+
 
 export default function Detail  () {
   
@@ -85,10 +89,10 @@ export default function Detail  () {
           <div className='flex md:flex-nowrap flex-wrap w-full'>
                <div className='md:w-[300px] md:min-w-[300px] md:h-[450px] block ' >
                   <div className='md:w-full md:h-full'>
-                    <img className='ml-3 md:ml-0 md:w-full md:min-w-full md:max-w-full md:h-full md:min-h-full md:max-h-full w-[calc(((100vw/2.222222)-40px)/1.5)] max-w-[calc(((100vw/2.222222)-40px)/1.5)] min-w-[calc(((100vw/2.222222)-40px)/1.5)] h-[calc((100vw/2.222222)-40px)] min-h[calc((100vw/2.222222)-40px)] ' src={`https://image.tmdb.org/t/p/original/${data.poster_path}`} alt="" />
+                    <LazyLoadImage src={`https://image.tmdb.org/t/p/original/${data.poster_path}`}  effect="blur"  className='ml-3 md:ml-0 md:w-full md:min-w-full md:max-w-full md:h-full md:min-h-full md:max-h-full w-[calc(((100vw/2.222222)-40px)/1.5)] max-w-[calc(((100vw/2.222222)-40px)/1.5)] min-w-[calc(((100vw/2.222222)-40px)/1.5)] h-[calc((100vw/2.222222)-40px)] min-h[calc((100vw/2.222222)-40px)] '  />
                   </div>
               </div>
-              <div className='flex text-white mt-14 w-full  md:mt-0' style={{backgroundImage:mobil && gradient}}>
+              <div className='flex text-white  w-full  md:mt-0' style={{backgroundImage:mobil && gradient}}>
                   <div className='md:pl-10 px-5 py-3 md:px-0 md:py-0  flex flex-wrap content-center items-center gap-7'>
                     <div className='w-full  text-white '>
                       <h1 className='text-4xl font-bold'>{data.original_title || data.name}</h1>
@@ -179,7 +183,13 @@ export default function Detail  () {
       </div>
 
       </div>
-    </section> : "loading"}
+    </section> :  <section className='w-full h-full grid place-items-center'>
+          <Spinner
+          aria-label="Extra large spinner example"
+          size="xl"
+        />
+    </section>
+}
     <section className='w-full h-auto my-10'>
       <div className="container mx-auto">
         <div className='md:w-3/4 md:max-w-3/4 w-full px-2'>
